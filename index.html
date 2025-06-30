@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGIS Yogyakarta</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container-fluid">
+  <div id="sidebar">
+    <div id="sidebar-top">
+      <h4>🧭 PETA KESESUAIAN LAHAN FASILITAS KESEHATAN KABUPATEN SLEMAN 
+</h4>
+    </div>
+    <div class="sidebar-content">
+      <a href="#" class="nav-link" onclick="toggleEditMenu()">🛠️ Menu Edit</a>
+      <div id="editMenu" class="submenu" style="display: none;">
+        <a href="#" class="nav-link" onclick="toggleBuffer()">🟢 Buffer: <span id="bStatus">OFF</span></a>
+        <a href="#" class="nav-link" onclick="toggleMeasure()">📏 Ukur Jarak: <span id="mStatus">OFF</span></a>
+        <a href="#" class="nav-link" onclick="toggleMarker()">📍 Marker Titik: <span id="tStatus">OFF</span></a>
+      </div>
+      <hr>
+      <a href="#" class="nav-link" onclick="locateUser()">📌 Lokasi Saya</a>
+    </div>
+    <div id="sidebar-bottom">
+      <small>
+        📅 Dibuat oleh:<br><strong>Kelompok 6</strong><br>
+        Gatot Priambodo - 117210069<br>
+        Hafizh Ryan Ramadhan - 117220033<br>
+        Aris Baha Y. Sinaga - 117220057<br>
+        🧑‍💻 Tahun: 2025<br>
+        🌐 SIG TERAPAN
+      </small>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+<script>
+  fetch('rumahsakit.geojson')
+    .then(res => res.json())
+    .then(data => {
+      L.geoJSON(data, {
+        onEachFeature: (feature, layer) => {
+          let nama = feature.properties.nama || "Rumah Sakit";
+          layer.bindPopup(`<b>${nama}</b>`);
+        },
+        pointToLayer: (feature, latlng) => {
+          return L.marker(latlng, { icon: L.icon({
+            iconUrl: 'https://cdn-icons-png.flaticon.com/512/168/168438.png',
+            iconSize: [25, 25]
+          })});
+        }
+      }).addTo(map);
+    });
+</script>
+</body>
+</html>
