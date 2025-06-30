@@ -11,8 +11,7 @@
 <div class="container-fluid">
   <div id="sidebar">
     <div id="sidebar-top">
-      <h4>🧭 PETA KESESUAIAN LAHAN FASILITAS KESEHATAN KABUPATEN SLEMAN 
-</h4>
+      <h4>🧭 PETA KESESUAIAN LAHAN FASILITAS KESEHATAN KABUPATEN SLEMAN</h4>
     </div>
     <div class="sidebar-content">
       <a href="#" class="nav-link" onclick="toggleEditMenu()">🛠️ Menu Edit</a>
@@ -40,23 +39,5 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="script.js"></script>
-<script>
-  fetch('rumahsakit.geojson')
-    .then(res => res.json())
-    .then(data => {
-      L.geoJSON(data, {
-        onEachFeature: (feature, layer) => {
-          let nama = feature.properties.nama || "Rumah Sakit";
-          layer.bindPopup(`<b>${nama}</b>`);
-        },
-        pointToLayer: (feature, latlng) => {
-          return L.marker(latlng, { icon: L.icon({
-            iconUrl: 'https://cdn-icons-png.flaticon.com/512/168/168438.png',
-            iconSize: [25, 25]
-          })});
-        }
-      }).addTo(map);
-    });
-</script>
 </body>
 </html>
