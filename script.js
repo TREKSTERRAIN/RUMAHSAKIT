@@ -1,7 +1,48 @@
 const map = L.map("map").setView([-7.8014, 110.3647], 13);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+
+// Definisikan base map (peta dasar)
+const tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "© OpenStreetMap"
-}).addTo(map);
+});
+tileLayer.addTo(map);
+
+// Definisikan LayerGroups untuk menampung setiap layer GeoJSON
+const batasSlemanLayer = L.layerGroup();
+const batasKecamatanLayer = L.layerGroup();
+const garisKecamatanLayer = L.layerGroup();
+const batasDesaLayer = L.layerGroup();
+const garisDesaLayer = L.layerGroup();
+const belumTerjangkauLayer = L.layerGroup();
+const kesesuaianLahanLayer = L.layerGroup();
+const kesesuaianLahanFixLayer = L.layerGroup();
+const rumahSakitLayer = L.layerGroup();
+
+// Atur layer mana saja yang akan aktif saat peta pertama kali dimuat
+rumahSakitLayer.addTo(map);
+batasSlemanLayer.addTo(map);
+
+// ----- KONTROL LAYER -----
+// Definisikan objek untuk peta dasar
+const baseMaps = {
+    "OpenStreetMap": tileLayer
+};
+
+// Definisikan objek untuk semua layer overlay (data GeoJSON)
+const overlayMaps = {
+    "Rumah Sakit": rumahSakitLayer,
+    "Batas Kabupaten Sleman": batasSlemanLayer,
+    "Batas Kecamatan": batasKecamatanLayer,
+    "Garis Kecamatan": garisKecamatanLayer,
+    "Batas Desa": batasDesaLayer,
+    "Garis Desa": garisDesaLayer,
+    "Wilayah Belum Terjangkau": belumTerjangkauLayer,
+    "Kesesuaian Lahan": kesesuaianLahanLayer,
+    "Kesesuaian Lahan Fix": kesesuaianLahanFixLayer
+};
+
+// Tambahkan kontrol layer ke peta
+L.control.layers(baseMaps, overlayMaps).addTo(map);
+// -------------------------
 
 let bufferActive = false, measureActive = false, markerActive = false;
 let bufferLayer = L.layerGroup().addTo(map);
@@ -124,69 +165,61 @@ function locateUser() {
   });
 }
 
-// ===== Tambahan Layer GeoJSON =====
+// ===== Memuat Layer GeoJSON dan Menambahkannya ke LayerGroup yang Sesuai =====
 fetch("batasleman.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#000000", weight: 2 }
-    }).addTo(map).bindPopup("Batas Kabupaten Sleman");
+    L.geoJSON(data, { style: { color: "#000000", weight: 2 }})
+      .bindPopup("Batas Kabupaten Sleman").addTo(batasSlemanLayer);
   });
 
 fetch("bataskecamatan.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#FF0000", weight: 2 }
-    }).addTo(map).bindPopup("Batas Kecamatan");
+    L.geoJSON(data, { style: { color: "#FF0000", weight: 2 }})
+      .bindPopup("Batas Kecamatan").addTo(batasKecamatanLayer);
   });
 
 fetch("bataskabupaten.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#FF6600", weight: 2 }
-    }).addTo(map).bindPopup("Garis Kecamatan");
+    L.geoJSON(data, { style: { color: "#FF6600", weight: 2 }})
+      .bindPopup("Garis Kecamatan").addTo(garisKecamatanLayer);
   });
 
 fetch("bataskecamatan.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#008000", weight: 2 }
-    }).addTo(map).bindPopup("Batas Desa");
+    L.geoJSON(data, { style: { color: "#008000", weight: 2 }})
+      .bindPopup("Batas Desa").addTo(batasDesaLayer);
   });
 
 fetch("batasdesa.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#00CC66", weight: 2 }
-    }).addTo(map).bindPopup("Garis Desa");
+    L.geoJSON(data, { style: { color: "#00CC66", weight: 2 }})
+      .bindPopup("Garis Desa").addTo(garisDesaLayer);
   });
 
 fetch("belumterjangkau.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#FFFF00", weight: 2 }
-    }).addTo(map).bindPopup("Wilayah Belum Terjangkau");
+    L.geoJSON(data, { style: { color: "#FFFF00", weight: 2 }})
+      .bindPopup("Wilayah Belum Terjangkau").addTo(belumTerjangkauLayer);
   });
 
 fetch("lahandesa.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#00BFFF", weight: 2 }
-    }).addTo(map).bindPopup("Kesesuaian Lahan");
+    L.geoJSON(data, { style: { color: "#00BFFF", weight: 2 }})
+      .bindPopup("Kesesuaian Lahan").addTo(kesesuaianLahanLayer);
   });
 
 fetch("kesesuaianlahanrumahsakit.geojson")
   .then(res => res.json())
   .then(data => {
-    L.geoJSON(data, {
-      style: { color: "#4B0082", weight: 2 }
-    }).addTo(map).bindPopup("Kesesuaian Lahan Fix");
+    L.geoJSON(data, { style: { color: "#4B0082", weight: 2 }})
+      .bindPopup("Kesesuaian Lahan Fix").addTo(kesesuaianLahanFixLayer);
   });
 
 fetch("rumahsakit.geojson")
@@ -194,14 +227,22 @@ fetch("rumahsakit.geojson")
   .then(data => {
     L.geoJSON(data, {
       onEachFeature: (feature, layer) => {
-        let nama = feature.properties.NAMA || feature.properties.name || "Rumah Sakit";
-        layer.bindPopup(`<b>${nama}</b>`);
+        const { Nama, Kategori, Kelas, Alamat } = feature.properties;
+        const popupContent = `
+          <b>${Nama}</b><br>
+          <b>Kategori:</b> ${Kategori}<br>
+          <b>Kelas:</b> ${Kelas}<br>
+          <b>Alamat:</b> ${Alamat}
+        `;
+        layer.bindPopup(popupContent);
       },
       pointToLayer: (feature, latlng) => {
-        return L.marker(latlng, { icon: L.icon({
-          iconUrl: 'https://png.pngtree.com/png-clipart/20200701/original/pngtree-hospital-icon-design-illustration-png-image_5345011.jpg',
-          iconSize: [25, 25]
-        })});
+        return L.marker(latlng, {
+          icon: L.icon({
+            iconUrl: 'https://png.pngtree.com/png-clipart/20200701/original/pngtree-hospital-icon-design-illustration-png-image_5345011.jpg',
+            iconSize: [25, 25]
+          })
+        });
       }
-    }).addTo(map);
+    }).addTo(rumahSakitLayer);
   });
