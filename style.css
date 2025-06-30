@@ -30,7 +30,7 @@ html, body {
   z-index: 0;
 }
 
-#sidebar-top, #sidebar-bottom {
+#sidebar-top, #sidebar-bottom, .sidebar-content {
   position: relative;
   z-index: 1;
 }
@@ -40,20 +40,18 @@ html, body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.sidebar-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-top: 10px;
+}
+
 #sidebar-bottom {
   padding-top: 10px;
   margin-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   font-size: 12px;
   color: #f0f0f0;
-}
-
-.sidebar-content {
-  position: relative;
-  z-index: 1;
-  flex-grow: 1;
-  overflow-y: auto;
-  padding-top: 10px;
 }
 
 .nav-link {
